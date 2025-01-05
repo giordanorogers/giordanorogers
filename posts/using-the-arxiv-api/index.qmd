@@ -1,0 +1,17 @@
+---
+title: "Good technical writing."
+author: "Giordano Rogers"
+date: "2025-01-02"
+categories: [programming]
+image: "image.jpg"
+---
+
+The first time I actually enjoyed reading a book that was somewhat technical was when I read the book "Thinking About Mathematics" by Stewart Shapiro.
+
+What stood about to me about his writing was...
+
+But still, Shapiro's book was more philosophical than mathematical.
+
+I went on to read some more technical books that I enjoyed. O'Reilly book publishers have some good stuff. I've found that an O'Reilly book with a lot of five star reviews, a compelling title, and a cool looking animal on the cover to be a good heuristic for choosing my next technical book to read.
+
+

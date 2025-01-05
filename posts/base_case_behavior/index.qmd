@@ -1,0 +1,84 @@
+---
+title: "Base Case Behavior."
+author: "Giordano Rogers"
+date: "2025-01-02"
+categories: [programming, philosophy]
+image: "image.jpg"
+---
+# Base Case Behavior
+
+The concept of base cases in inductive hypotheses are a good way to approach
+programming.
+
+Always test the base case: the most simple version of what you're trying to 
+achieve.
+
+You want to build a wrapper around an api?
+
+Make the simplest possible api call first.
+
+You want to build your own REST API to interact with your database?
+
+Build one that prints a simple "hello world" response first.
+
+Alwasy start simple.
+
+Always start with the base case.
+
+From there, you have a foundation to reason about the rest of the sequence.
+
+Now I have a frame.
+
+If I add this one small next step, I can it again.
+
+I can keep iterating slowly through the sequence of events until I reach the 
+outcome I'm looking for.
+
+But now I'm not looking blindly.
+
+Base case programming is prototyping.
+
+But unlike the concept of protoyping, the term base case programming emphasizes
+two important things. First, is simplicity. In mathematical reasoning, the base
+case is always considered somewhat arbitrary, usually contained withing the
+definition of the proposition itself. 
+
+Consider the following sequence:
+$$
+x_n = 2x_{n-1} + x_{n-2} \quad \text{for} \quad n \geq 3
+$$
+
+Use induction to prove that $a_{2n}$ is even for all integers $n \ge 1$.
+
+When you first see a prolem like this, there's no clear way to reason about.
+
+Now, if I give you the start of the sequence, you can start to build up an intuition.
+
+$$
+x_1 = -1, \quad x_2 = 0, \quad x_n = 2x_{n-1} + x_{n-2} \quad \text{for} \quad n \geq 3
+$$
+
+The way we'd prove the conjecture formally, is by starting with these base cases, and reasoning up.
+
+$$
+x_3 = 2(0) + (-1) = -1
+x_4 = 2(-1) + (0) = -2
+x_5 = 2(-2) + (-1) = -5
+$$
+
+But to prove the statement generally, we don't have to show every step of the sequence.
+
+We just have to show that the next step always follows the same pattern.
+
+Assume that $x_{2k}$ is even for some integer $k \ge 1$. We can prove that $x_2(k+1)$ is even, because:
+
+$$
+x_{2(k+1)} = 2x_{2(k+1)-1} + x_{2(k+1)-2} = 2x_{k+1} + a_{2k}
+$$
+
+Since $a_{2k}$ is even, and $2a_{2k+1} must be even sice $a_{2K+1} 
+
+In this example, there
+
+
+The base case is always 

@@ -1,0 +1,172 @@
+---
+title: "Fourier Series for Modeling Melody"
+author: "Giordano Rogers"
+date: "2025-01-04"
+categories: [music, math]
+image: "fourier_graph.svg"
+---
+
+
+A function is mapping of an object in a set to some output.
+
+The musical notes are a set.
+
+A musical scale is a more narrow set.
+
+And rhythms and progressions can be codified down to a generative algorithm.
+
+For example, take the melody for "Mary Had a Little Lamb"
+
+EDCDEEEDDDEGGEDCDEEEEDDEDC
+
+Can we create a function f(x) that computes the proper note if we treat x as the
+note's index in the sequence?
+
+What about a simpler harmony first.
+
+```{=html}
+<audio controls>
+  <source src="EGEC.wav" type="audio/wav">
+  Your browser does not support the audio element.
+</audio>
+```
+
+This is a walk up and down the C major chord. We start at E, then up three
+half-notes to G, back to E, down three half-notes to C, and then back to E.
+
+If we express each bar of a four bar loop as a zero indexed array, then we
+can model this melody as mathematically as the function:
+
+$$
+f(x) = 4 + 3\sin(\frac{\pi}{2}x)
+$$
+
+Or, in python:
+
+```{python}
+from math import sin, pi
+
+def egec(index):
+    note = 4 + 3 * sin((pi / 2) * index)
+    return round(note)
+
+note_list = [egec(index) for index in range(8)]
+print(note_list)
+```
+
+And we can graph this melody like so:
+
+![Graph of the EGEC melody function](cool_graph.svg)
+
+It shouldn't be surprising that we can graph simple melodies like this as sine curves. After all, the MIDI notes on my piano roll in Ableton Live look just like the graph:
+
+![MIDI piano roll of EGEC melody](egec.png)
+
+What's interesting about this is that any melody we can functionalize like this,
+we can generate programmatically.
+
+Think about the whole world of automated music we can make if we can define our
+melodic taste in such a formal way.
+
+Now obviously, this simple melody would get very boring after some time.
+
+Let's return to thinking about the Mary Had A Little Lamb melody.
+
+Here are the notes again:
+
+EDCDEEEDDDEGGEDCDEEEEDDEDC
+
+Here it is as played on the piano:
+
+```{=html}
+<audio controls>
+  <source src="mary_had_a_little_lambd.wav" type="audio/wav">
+  Your browser does not support the audio element.
+</audio>
+```
+
+This melody is not as periodic as the EGEC melody, but there's still enough of
+a pattern to it that we can intuitively sense that there must be some way to
+map it to a function.
+
+Luckily, a similar logic applies.
+
+Just like we used a sin wave to model the transitions in the EGEC melody, we
+can combine several sin wavs to approximate a function that will get us our
+Mary Had A Little Lamb melody too.
+
+This will involve using the power of the Fourier series.
+
+A Fourier series can approximate any periodic function by summing sine and
+cosine terms.
+
+Even though the Mary Had a Lamb melody isn't periodic, we can "force" periodicity by repeating the sequence and using Fourier coefficients to approximate the pattern.
+
+```{python}
+from numpy import arange, linspace, cos, sin, mean
+
+# Define the melody as integers
+melody = [4, 2, 0, 2, 4, 4, 4, 2, 2, 2, 4, 7, 7,
+          4, 2, 0, 2, 4, 4, 4, 4, 2, 2, 4, 2, 0]
+N = len(melody)  # Number of terms in the melody
+x_vals = arange(0, N)  # Melody indices
+
+# Extend melody for visualization
+repeats = 3
+extended_melody = melody * repeats
+extended_x_vals = arange(0, N * repeats)
+
+# Compute Fourier series approximation
+def fourier_series(x, num_terms=10):
+    a0 = mean(melody)  # Mean value (DC component)
+    approx = a0  # Start with the DC component
+    for n in range(1, num_terms + 1):
+        an = (2 / N) * sum(melody * \
+          cos(2 * pi * n * x_vals / N))
+        bn = (2 / N) * sum(melody * \
+          sin(2 * pi * n * x_vals / N))
+        approx += an * cos(2 * pi * n * x / N) + \
+          bn * sin(2 * pi * n * x / N)
+    return approx
+
+# Generate Fourier approximation
+x_approx = linspace(0, N * repeats, 1000)  # Smooth x values
+y_approx = fourier_series(x_approx)
+
+# Generate discrete indices for approximation
+discrete_indices = arange(0, N * repeats)  # Integer indices
+
+# Compute Fourier series and round to nearest whole number
+y_discrete_approx = [round(fourier_series(x))
+                     for x in discrete_indices]
+
+# Print the first 16 approximated notes
+print("First 16 Notes of Mary Had a Little Lamb")
+print("\nFourier Approximation (Rounded):")
+print(y_discrete_approx[:16])
+print("\nOriginal Melody:")
+print(extended_melody[:16])
+```
+
+And we can view the graph of the approximated curve too:
+
+![Graph of the Mary Had a Little Lamb melody](fourier_graph.svg)
+
+And if we zoom in the graph a bit to see the first cycle of the melody:
+
+![Graph of the first cycle of the Mary Had a Little Lamb melody](fourier_zoomed_graph.svg)
+
+And as we'd expect, we can see that it looks pretty similar to the piano roll of the midi notes for Mary Had a Little Lamb that I recorded in Ableton Live:
+
+![MIDI piano roll for Mary Had a Little Lamb](mary_lamb_roll2.png)
+
+Again though, this Mary Had a Little Lamb melody is very simple compared to the
+melodies in most of the music people tend to listen to.
+
+But the beauty of the Fourier series is that we can create curves for many
+different melodies using this same technique, and then we can adjust the curves
+by changing a few parameters, and generate similar but novel melodies with our 
+new adapted curves.
+
+As a more advanced step, we could combine Fourier methods with neural networks 
+to capture non-period and stylistic elements.

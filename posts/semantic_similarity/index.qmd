@@ -1,0 +1,256 @@
+---
+title: "Semantic Similarity"
+author: "Giordano Rogers"
+date: "2025-01-04"
+categories: [NLP, math]
+image: ""
+---
+
+Part of why natural language processing appeals to me is the prospect of being
+able to compare two bodies of text mathematically.
+
+Lately I've been building a an app that generates newsletter summarizations of
+emerging research.
+
+But I've been asking myself how I can improve the paper filtering.
+
+As of now, let's say on a given day my app collects 100 papers from my research
+field.
+
+Even if all of these papers were summarized to a single sentence, I wouldn't want
+to read all that.
+
+So we need a way to automate the selection process, so that the three to five
+papers I see when I open up my email, are ones that I'm actually interested in.
+
+One very simply approach would be to keep a list of keywords, and to check if
+any of the papers have abstracts that contain one of my keywords.
+
+An issue with this is the problem of synonyms.
+
+What if I'm very interested in signal processing for music, and I decide to use
+the keywords
+
+```{python}
+def keyword_search(
+    abstracts, keywords = ["signal processing", "music"]
+    ):
+    selected_abstracts = []
+    for abstract in abstracts:
+        for keyword in keywords:
+            if keyword in abstract.strip().lower():
+                selected_abstracts.append(abstract)
+    return selected_abstracts
+```
+
+Let's say an amazing new paper drops introducing a revolutionary new algorithm
+for musical signal processing, but the abstract only uses the common acronym
+DSP, for digital signal processing, rather than the whole word? What if instead
+of "music" they use synonys like "melody" or "instrumental"?
+
+In that case, my simple string search method for selection wouldn't work.
+
+Although the keyword search technically does fall under the branch of natural
+language processing, it is a very rudimentary approach and we have much better
+ways to perform this task.
+
+The most common method currently is cosine similarity.
+
+This involves converting two pieces of texts you want to compare into their own
+vector representaitons using LLM embeddings, and then computing the angle 
+between the two vectors.
+
+The mathematical formula for cosine similarity:
+
+$$
+\cos(\theta) = \frac{\mathbf{a} \cdot \mathbf{b}}{ \lVert \mathbf{a} \rVert \lVert \mathbf{b} \rVert}
+$$
+
+In python:
+
+```{python}
+from numpy import dot, linalg
+
+def cosine_similarity(a, b):
+  a_dot_b = dot(a, b)
+  a_norm = linalg.norm(a)
+  b_norm = linalg.norm(b)
+  return a_dot_b / (a_norm * b_norm)
+```
+
+Implementation is stripped down for readability and teaching purposes, but fundamentally this is the essence of cosine similarity. It is surprising how much can be achieved with such a simple function.
+
+As a toy example, consider we have three simplified vectors that represent three words.
+
+```{python}
+from numpy import random
+
+dog = random.normal(9, 0.1, 10)
+cat = random.normal(9, 0.1, 10)
+chocolate = random.normal(-1, 0.1, 10)
+```
+
+In practice, these vectors would be much longer, and we may be comparing whole paragraphs or documents rather than just single words. But we can look at this example and, both in language and in math, intuit that the first two terms are more similar than to eachother than either is to the third.
+
+Using our cosing similarity function, we can calcualte this similarity.
+
+```{python}
+from numpy import dot, linalg, random
+
+def cosine_similarity(a, b):
+  a_dot_b = dot(a, b)
+  a_norm = linalg.norm(a)
+  b_norm = linalg.norm(b)
+  return a_dot_b / (a_norm * b_norm)
+
+random.seed(69)
+dog = random.normal(9, 0.1, 10)
+cat = random.normal(9, 0.1, 10)
+chocolate = random.normal(-1, 0.1, 10)
+
+print("Similarity between 'cat' and 'dog':")
+print(cosine_similarity(cat, dog))
+print("\nSimilarity between 'cat' and 'chocolate':")
+print(cosine_similarity(cat, chocolate))
+print("\nSimilarity between 'dog' and 'chocolate':")
+print(cosine_similarity(cat, chocolate))
+```
+
+If we extend this logic out to the comparison between research paper abstracts, and my list of keywords, then we wouldn't necessarily need the keywords themselves to be present in the text. All we would need is for the semantic meaning of the words in the text to be close enough to the semantics of my keywords so that the text is selected for as relevant, relative to all the other abstracts I collected on a given day.
+
+But even though cosine similarity is the most popular tool for this job, it isn't the only way. And maybe not even the best way.
+
+Another method is to find the Euclidean distance,
+
+In math notation, this is represented as:
+
+$$
+d = \sqrt{\sum_{i=1}^{n}(a_i - b_i)^2}
+$$
+
+And in python:
+
+```{python}
+from numpy import sqrt
+
+def euclidean_distance(a, b):
+  sum = 0
+  for a_i, b_i in zip(a, b):
+    sum += (a_i - b_i) ** 2
+  return sqrt(sum)
+```
+
+Let's see how this function performs on our cat, dog, and chocolate vectors:
+
+```{python}
+from numpy import dot, linalg, sqrt, random
+
+def cosine_similarity(a, b):
+  a_dot_b = dot(a, b)
+  a_norm = linalg.norm(a)
+  b_norm = linalg.norm(b)
+  return a_dot_b / (a_norm * b_norm)
+
+def euclidean_distance(a, b):
+  sum = 0
+  for a_i, b_i in zip(a, b):
+    sum += (a_i - b_i) ** 2
+  return sqrt(sum)
+
+random.seed(69)
+dog = random.normal(9, 0.1, 10)
+cat = random.normal(9, 0.1, 10)
+chocolate = random.normal(-1, 0.1, 10)
+
+print("\nDistance between 'cat' and 'dog':")
+print(euclidean_distance(cat, dog))
+print("\nDistance between 'cat' and 'chocolate':")
+print(euclidean_distance(cat, chocolate))
+print("\nDistance between 'dog' and 'chocolate':")
+print(euclidean_distance(cat, chocolate))
+```
+
+Again this makes sense. We can see that the distance between 'cat' and 'dog' is relatively small, wheras the distances between each word and 'chocolate' is relatively large.
+
+But so far we've been testing these algorithms on very simple data. Each of these vectors has only ten dimensions.
+
+How would these algorithms hold up with realistic data? For example, vector embeddings generated with OpenAI's embeddings model create vectors with 1536 dimension.
+
+Again we'll use a hack to get us there for demonstration purposes. Let's change these ten dimensional vectors into 1500-dimensional vectors.
+
+```{python}
+from numpy import dot, linalg, sqrt, random
+
+def cosine_similarity(a, b):
+  a_dot_b = dot(a, b)
+  a_norm = linalg.norm(a)
+  b_norm = linalg.norm(b)
+  return a_dot_b / (a_norm * b_norm)
+
+def euclidean_distance(a, b):
+  sum = 0
+  for a_i, b_i in zip(a, b):
+    sum += (a_i - b_i) ** 2
+  return sqrt(sum)
+
+random.seed(69)
+dog = random.normal(9, 0.1, 1500)
+cat = random.normal(9, 0.1, 1500)
+chocolate = random.normal(-1, 0.1, 1500)
+
+print("Similarity between 'cat' and 'dog':")
+print(cosine_similarity(cat, dog))
+print("\nSimilarity between 'cat' and 'chocolate':")
+print(cosine_similarity(cat, chocolate))
+print("\nSimilarity between 'dog' and 'chocolate':")
+print(cosine_similarity(cat, chocolate))
+
+print("\nDistance between 'cat' and 'dog':")
+print(euclidean_distance(cat, dog))
+print("\nDistance between 'cat' and 'chocolate':")
+print(euclidean_distance(cat, chocolate))
+print("\nDistance between 'dog' and 'chocolate':")
+print(euclidean_distance(cat, chocolate))
+```
+
+Now let's use some statistical methods to see how the quality of our low-dimensional
+similarity/distance scores, and our high-dimensional similarity/distance scores stack up.
+
+```{python}
+from numpy import (
+  corrcoef, dot, linalg, sqrt,
+  random, std, var, sqrt
+)
+
+def cosine_similarity(a, b):
+  a_dot_b = dot(a, b)
+  a_norm = linalg.norm(a)
+  b_norm = linalg.norm(b)
+  return a_dot_b / (a_norm * b_norm)
+
+def euclidean_distance(a, b):
+  sum = 0
+  for a_i, b_i in zip(a, b):
+    sum += (a_i - b_i) ** 2
+  return sqrt(sum)
+
+def diem(a, b, v_min, v_max, n_dim):
+    ed = sqrt(sum((ai - bi)**2 for ai, bi in zip(a, b)))
+    e_d = sqrt(n_dim) * (v_max - v_min) / 6  # Expected distance
+    sigma_ed = sqrt((v_max - v_min)**2 / 12)
+    return (v_max - v_min) / sigma_ed**2 * (ed - e_d)
+
+# Generate random vectors and compute metrics
+random.seed(69)
+dog = random.normal(9, 0.1, 1500)
+cat = random.normal(9, 0.1, 1500)
+chocolate = random.normal(-1, 0.1, 1500)
+
+cosine_cat_dog = cosine_similarity(cat, dog)
+euclidean_cat_dog = euclidean_distance(cat, dog)
+diem_cat_dog = diem(cat, dog, -1, 9, 1500)
+
+print(f"Cosine Similarity: {cosine_cat_dog}")
+print(f"Euclidean Distance: {euclidean_cat_dog}")
+print(f"DIEM: {diem_cat_dog}")
+```

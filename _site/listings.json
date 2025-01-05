@@ -1,0 +1,12 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/semantic_similarity/index.html",
+      "/posts/generative_music/index.html",
+      "/posts/using-the-arxiv-api/index.html",
+      "/posts/data_first_mentality/index.html",
+      "/posts/base_case_behavior/index.html"
+    ]
+  }
+]

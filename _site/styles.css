@@ -1,0 +1,9 @@
+@import url('https://cdn.jsdelivr.net/npm/cmu-serif-webfont@latest/style.css'); /* A web version of Computer Modern */
+
+body {
+  font-family: 'CMU Serif', serif; /* For body text */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'CMU Serif', serif; /* For headings */
+}

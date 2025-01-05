@@ -1,0 +1,21 @@
+---
+title: "about_me"
+image: headshot.jpg
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: Github
+      href: https://www.youtube.com/@giordanorogers
+    - icon: youtube
+      text: YouTube
+      href: https://www.youtube.com/@giordanorogers
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/giorogers/
+
+---
+
+Writing about software, math, and music.
+
+Northeastern, Center for Inclusive Computing.

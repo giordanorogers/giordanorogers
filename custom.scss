@@ -1,0 +1,82 @@
+/*-- scss:rules --*/
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css');
+
+/* Apply JetBrains Mono globally */
+/* Apply JetBrains Mono globally, except for LaTeX elements */
+body, h1, h2, h3, h4, h5, .navbar, .header, .secondary-header, .main-body {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Exclude LaTeX content from JetBrains Mono */
+.math, .katex, .katex-html, math {
+    font-family: inherit !important;
+}
+
+/* Apply a darker background to code blocks while keeping GitHub Dark theme */
+pre, code, cell-output, .highlight pre, .highlight code {
+    background-color: #0a0a0a !important; /* Darker black background */
+    color: inherit !important; /* Keep the syntax colors from GitHub Dark */
+    border-radius: 6px; /* Optional: Rounded corners */
+    padding: 1rem; /* Add padding for better readability */
+    overflow: auto; /* Ensure code blocks are scrollable if content is too wide */
+}
+
+/* Ensure the pre element itself has the background color */
+pre {
+    background-color: #0a0a0a !important; /* Ensure overflow area matches */
+}
+
+/* Style the scrollbar for code blocks */
+pre::-webkit-scrollbar {
+    width: 8px; /* Width of the vertical scrollbar */
+    height: 8px; /* Height of the horizontal scrollbar */
+  }
+  
+  pre::-webkit-scrollbar-thumb {
+    background-color: #000; /* Black scrollbar thumb */
+    border: 2px solid #fff; /* White outline around the scrollbar thumb */
+    border-radius: 4px; /* Rounded edges for the scrollbar thumb */
+  }
+  
+  pre::-webkit-scrollbar-track {
+    background-color: #000; /* Black scrollbar track */
+    border: 2px solid #fff; /* White outline around the track */
+    border-radius: 4px; /* Match the thumb rounding for aesthetics */
+  }
+
+/* If specific sections need the font */
+.quarto-title-banner,
+.header,
+.secondary-header,
+.main-body {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+// Force near-black for body and text
+$body-bg: #000 !default;
+$body-color: #fff !default;
+
+// Make absolutely everything black by default, if needed
+body, .navbar, .header, .secondary-header, .main-body {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+// Put a white border under both the main top header and secondary header
+.header, .secondary-header {
+  border-bottom: 1px solid #fff !important;
+}
+
+// If you have other header classes or sections, ensure they're black as well
+.navbar {
+  border-bottom: 1px solid #fff !important;
+}
+
+// Specifically override the Quarto title banner
+.quarto-title-banner {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #fff !important;
+}

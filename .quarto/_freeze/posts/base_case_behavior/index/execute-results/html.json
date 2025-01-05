@@ -1,0 +1,12 @@
+{
+  "hash": "532a89539bd09b9ef409210757af6fd3",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Data-first mentality.\"\nauthor: \"Giordano Rogers\"\ndate: \"2025-01-02\"\ncategories: [programming, philosophy]\nimage: \"image.jpg\"\n---\n\n# Base Case Behavior\n\nThe concept of base cases in inductive hypotheses are a good way to approach\nprogramming.\n\nAlways test the base case: the most simple version of what you're trying to \nachieve.\n\nYou want to build a wrapper around an api?\n\nMake the simplest possible api call first.\n\nYou want to build your own REST API to interact with your database?\n\nBuild one that prints a simple \"hello world\" response first.\n\nAlwasy start simple.\n\nAlways start with the base case.\n\nFrom there, you have a foundation to reason about the rest of the sequence.\n\nNow I have a frame.\n\nIf I add this one small next step, I can it again.\n\nI can keep iterating slowly through the sequence of events until I reach the \noutcome I'm looking for.\n\nBut now I'm not looking blindly.\n\nBase case programming is prototyping.\n\nBut unlike the concept of protoyping, the term base case programming emphasizes\ntwo important things. First, is simplicity. In mathematical reasoning, the base\ncase is always considered somewhat arbitrary, usually contained withing the\ndefinition of the proposition itself. \n\n\n```{latex}\nx_0 = 0, x_1 = 4\n```\n\n\nThe base case is always \n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
